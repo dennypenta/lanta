@@ -7,13 +7,13 @@ import globals from 'globals'
 
 /** @type {import('eslint').Linter.Config[]} */
 export default ts.config(
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**', '**/node_modules/**']),
+  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**', 'src/env.d.ts']),
   js.configs.recommended,
   ...ts.configs.recommended,
   {
     languageOptions: {
       globals: {
-        ...globals.node,
+        ...globals.browser,
       },
     },
   },
@@ -28,16 +28,15 @@ export default ts.config(
       'no-restricted-syntax': [
         'error',
         {
-          selector: 'Literal[value=undefined]',
-          message: 'Use null instead of undefined',
+          selector: 'Literal[value=null]',
+          message: 'Use undefined instead of null',
         },
         {
-          selector: 'TSUndefinedKeyword',
-          message: 'Use null instead of undefined (TypeScript type)',
+          selector: 'TSNullKeyword',
+          message: 'Use undefined instead of null (TypeScript type)',
         },
       ],
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': [
+      'no-unused-vars': [
         'error',
         {
           vars: 'all',

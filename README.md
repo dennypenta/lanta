@@ -1,12 +1,11 @@
 
 - [x] setup basic api
-- [ ] add env loading for config
-- [ ] add dev config depending on the envs: https://bun.com/docs/runtime/http/error-handling
+- [x] add env loading for config
 - [ ] cors middleware 
 - [ ] logging middleware
 - [ ] drizzle setup
 - [x] setup a health check
-- [ ] graceful shutdown
+- [x] graceful shutdown
 
 - [ ] setup basic client router
 - [ ] setup basic ui

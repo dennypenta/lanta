@@ -1,11 +1,15 @@
-type Config = {
-    port: number,
-};
+import { z } from 'zod'
+
+const Config = z.object({
+  port: z.number(),
+})
+
+export type Config = z.infer<typeof Config>
 
 function newConfig(): Config {
-    return {
-        port: 8000,
-    };
+  return Config.parse({
+    port: Number(process.env.PORT),
+  })
 }
 
-export default newConfig;
+export default newConfig
