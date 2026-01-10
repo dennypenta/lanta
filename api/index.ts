@@ -1,4 +1,4 @@
-import newConfig from './config.ts'
+import newConfig from './config/config.ts'
 
 const config = newConfig()
 
