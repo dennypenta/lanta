@@ -42,7 +42,7 @@ Multi-tenant kanban board (Trello/Linear-like).
 - [x] Setup HTTP server with Bun
 - [x] Configure API routing structure
 - [x] Setup oRPC transport to prepare for middlewares, move the existing fetch function to a designated cors middleware
-- [ ] Setup structured logging middleware
+- [x] Setup structured logging middleware
 - [x] Configure CORS and security headers
 - [x] Implement GET /health endpoint (responds with 200 OK)
 
@@ -50,8 +50,8 @@ Multi-tenant kanban board (Trello/Linear-like).
 
 ### 1.4 UI Foundation
 
-- [ ] Choose and setup UI component library ark ui
-- [ ] Configure Tailwind CSS for solid
+- [ ] setup UI component library ark ui
+- [x] Configure Tailwind CSS for solid
 - [ ] Create base layout components (Header, Sidebar, Main)
 - [ ] Setup responsive design breakpoints
 - [ ] Configure build tooling (Vite) for solid
