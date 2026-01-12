@@ -1,0 +1,12 @@
+{
+  "name": "@lanta/shared",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schemas": "./src/schemas/index.ts",
+    "./types": "./src/types/index.ts"
+  },
+  "dependencies": {
+    "zod": "^4.3.5"
+  }
+}

@@ -18,27 +18,28 @@ Multi-tenant kanban board (Trello/Linear-like).
 ## Phase 1: Foundation & Infrastructure
 
 ### 1.1 Development Environment Setup
-- [ ] Setup Bun backend project structure
-- [ ] Setup solid frontend project structure
-- [ ] Configure development servers with hot reload
-- [ ] Setup project file organization (backend/, frontend/)
+- [x] Setup Bun backend project structure
+- [x] Setup solid frontend project structure
+- [x] Configure development servers with hot reload
+- [x] Setup project file organization (backend/, frontend/)
 
 **Dependencies:** None
 
 ### 1.2 Database Layer
-- [ ] Setup drizzle
-- [ ] Create database schema (see Phase 2 for details)
-- [ ] Setup migration system
-- [ ] Configure SQLite connection pool
+- [x] Setup drizzle
+- [x] Create database schema (see Phase 2 for details)
+- [x] Setup migration system
+- [x] Configure SQLite connection pool
 
 **Dependencies:** 1.1
 
 ### 1.3 API Infrastructure
-- [ ] Setup HTTP server with Bun
-- [ ] Configure API routing structure
+- [x] Setup HTTP server with Bun
+- [x] Configure API routing structure
 - [ ] Setup error handling middleware and structured logging
-- [ ] Configure CORS and security headers
-- [ ] Implement GET /health endpoint (responds with 200 OK)
+- [ ] Implement native bun middlewares
+- [x] Configure CORS and security headers
+- [x] Implement GET /health endpoint (responds with 200 OK)
 
 **Dependencies:** 1.1, 1.2
 

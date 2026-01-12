@@ -26,5 +26,5 @@
     "noPropertyAccessFromIndexSignature": false
   },
   "files": [],
-  "references": [{ "path": "./api" }]
+  "references": [{ "path": "./api" }, { "path": "./web" }, { "path": "./shared" }]
 }
