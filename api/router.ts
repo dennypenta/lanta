@@ -8,17 +8,21 @@ import {
 } from '@orpc/server/plugins'
 import { type Config } from './config/config.ts'
 import { securityHeadersMiddleware } from './middlewares/headers.ts'
+import { loggingMiddleware } from './middlewares/logging.ts'
 
 // interface ORPCContext extends ResponseHeadersPluginContext {}
 
-export function newRPC(config: Config) {
+export function newRPC(config: Config ) {
   const secHeaders = securityHeadersMiddleware()
-  const base = os.$context<ResponseHeadersPluginContext>().use(({ context, next }) => {
-    for (const [key, val] of Object.entries(secHeaders)) {
-      context.resHeaders?.set(key, val)
-    }
-    return next()
-  })
+  const base = os
+    .$context<ResponseHeadersPluginContext>()
+    .use(loggingMiddleware(config.logLevel))
+    .use(({ context, next }) => {
+      for (const [key, val] of Object.entries(secHeaders)) {
+        context.resHeaders?.set(key, val)
+      }
+      return next()
+    })
 
   const hello = base.handler(async () => 'hello')
   const router = {
