@@ -1,7 +1,6 @@
-
 - [x] setup basic api
 - [x] add env loading for config
-- [ ] cors middleware 
+- [ ] cors middleware
 - [ ] logging middleware
 - [ ] drizzle setup
 - [x] setup a health check
@@ -56,4 +55,4 @@
 
 - [ ] task dependencies
 
-- [ ] display board as AI 
+- [ ] display board as AI

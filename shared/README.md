@@ -7,17 +7,17 @@ Shared validation schemas, types, and utilities for Lanta monorepo.
 ### In API (Backend)
 
 ```typescript
-import { createProjectSchema, type Project } from "@lanta/shared/schemas";
-import { z } from "zod";
+import { createProjectSchema, type Project } from '@lanta/shared/schemas'
+import { z } from 'zod'
 
 // Validate request body
-app.post("/api/projects", async (req) => {
-  const body = createProjectSchema.parse(req.body);
+app.post('/api/projects', async (req) => {
+  const body = createProjectSchema.parse(req.body)
   // body is now typed as CreateProject
 
-  const project = await db.insert(projects).values(body);
-  return project;
-});
+  const project = await db.insert(projects).values(body)
+  return project
+})
 ```
 
 ### In Web (Frontend)
@@ -57,12 +57,12 @@ function CreateProjectForm() {
 ### Using Types Only
 
 ```typescript
-import type { Project, ApiResponse } from "@lanta/shared/types";
+import type { Project, ApiResponse } from '@lanta/shared/types'
 
 const fetchProjects = async (): Promise<ApiResponse<Project[]>> => {
-  const response = await fetch("/api/projects");
-  return response.json();
-};
+  const response = await fetch('/api/projects')
+  return response.json()
+}
 ```
 
 ## Structure

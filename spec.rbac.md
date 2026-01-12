@@ -18,17 +18,20 @@ This document specifies the Role-Based Access Control system for the Lanta task 
 ## Architecture: Client-Server Boundary
 
 ### Server Responsibilities
+
 - **Permission Computation**: Determine user's permissions based on role and project configuration
 - **Permission Enforcement**: Validate permissions in middleware and API handlers
 - **Permission Storage**: Manage `DEFAULT_ROLE_PERMISSIONS` for seeding new projects
 - **Permission Delivery**: Provide permission sets to client via API endpoints
 
 ### Client Responsibilities
+
 - **Permission Display**: Show/hide UI elements based on permissions received from server
 - **No Validation**: Never compute or validate permissions locally
 - **No Defaults**: Never reference `DEFAULT_ROLE_PERMISSIONS` or role-based permission logic
 
 ### Data Flow
+
 ```
 Database → getUserPermissions() → API Response → Frontend State → PermissionGate → UI
 ```
@@ -46,6 +49,7 @@ Permissions use a `resource:action` naming convention:
 ```
 
 Examples:
+
 - `projects:read`
 - `projects:write`
 - `tasks:write`
@@ -53,11 +57,13 @@ Examples:
 ### Available Permissions
 
 #### Projects
+
 - `projects:read` - View project details and settings
 - `projects:write` - Edit project name and description
 - `members:write` - Add/remove members, change member roles
 
 #### Tasks
+
 - `tasks:read` - View tasks
 - `tasks:write` - Create and edit tasks
 
@@ -66,6 +72,7 @@ Examples:
 ### Built-in Roles
 
 #### Admin (Special Role)
+
 - **Permissions**: ALL permissions (automatically)
 - **Granted**: Automatically to project creator
 - **Modification**: Cannot modify permissions; always has everything
@@ -73,6 +80,7 @@ Examples:
 - **Guaranteed**: Every project must have at least one admin
 
 #### Member
+
 - **Permissions** (default):
   - `projects:read`
   - `tasks:read`
@@ -81,6 +89,7 @@ Examples:
 - **Modification**: Permissions can be customized per project
 
 #### Viewer
+
 - **Permissions** (default):
   - `projects:read`
   - `tasks:read`
@@ -112,6 +121,7 @@ CREATE TABLE project_role_permissions (
 ```
 
 **Key Design Decisions**:
+
 - Each row represents one permission granted to one role in one project
 - `role` stored as string (not FK) to support future custom roles
 - UNIQUE constraint prevents duplicate grants
@@ -138,10 +148,11 @@ const ROUTE_PERMISSION_RULES = [
     methods: ['POST'],
     permissions: ['members:write'],
   },
-];
+]
 ```
 
 **Important Notes:**
+
 - Routes WITHOUT a project ID (e.g., `/api/projects`) have NO permission requirements
 - These routes can't enforce project-scoped permissions since there's no project context
 - Only routes with a project ID parameter can require permissions
@@ -179,32 +190,37 @@ User must have ALL listed permissions to access the endpoint.
 ```typescript
 export async function enforcePermissions(req: Request, next: NextFunction) {
   // 1. Check if route requires permissions
-  const requiredPerms = getRequiredPermissions(req.method, req.url);
-  if (!requiredPerms) return next();
+  const requiredPerms = getRequiredPermissions(req.method, req.url)
+  if (!requiredPerms) return next()
 
   // 2. Extract project ID from URL
-  const projectId = extractProjectId(req.url);
-  if (!projectId) return next();
+  const projectId = extractProjectId(req.url)
+  if (!projectId) return next()
 
   // 3. Get user's permissions for this project
-  const { role, permissions } = await getUserPermissions(projectId, req.user.id);
+  const { role, permissions } = await getUserPermissions(projectId, req.user.id)
 
   // 4. Check if user is a project member
   if (permissions.size === 0) {
-    return Response.json({ error: 'Not found' }, { status: 404 }); // Security: hide existence
+    return Response.json({ error: 'Not found' }, { status: 404 }) // Security: hide existence
   }
 
   // 5. Validate user has all required permissions
-  const authorized = requiredPerms.every(perm => permissions.has(perm));
+  const authorized = requiredPerms.every((perm) => permissions.has(perm))
   if (!authorized) {
-    logger.info('Permission denied', { userId: req.user.id, projectId, role, required: requiredPerms });
-    return Response.json({ error: 'Forbidden' }, { status: 403 });
+    logger.info('Permission denied', {
+      userId: req.user.id,
+      projectId,
+      role,
+      required: requiredPerms,
+    })
+    return Response.json({ error: 'Forbidden' }, { status: 403 })
   }
 
   // 6. Attach permission context to request for handlers
-  req.projectContext = { projectId, role, permissions };
+  req.projectContext = { projectId, role, permissions }
 
-  return next();
+  return next()
 }
 ```
 
@@ -217,30 +233,30 @@ export async function enforcePermissions(req: Request, next: NextFunction) {
 ```typescript
 export async function getUserPermissions(
   projectId: string,
-  userId: string
+  userId: string,
 ): Promise<{ role: string; permissions: Set<Permission> }> {
   // 1. Get user's role from project_members
   const member = await db('project_members')
     .where({ project_id: projectId, user_id: userId })
-    .first();
+    .first()
 
   if (!member) {
-    return { role: 'none', permissions: new Set() };
+    return { role: 'none', permissions: new Set() }
   }
 
   // 2. Admin role gets all permissions (fast path, no DB query)
   if (member.role === 'admin') {
-    return { role: 'admin', permissions: new Set(ALL_PERMISSIONS) };
+    return { role: 'admin', permissions: new Set(ALL_PERMISSIONS) }
   }
 
   // 3. Query permissions from project_role_permissions
   const permRows = await db('project_role_permissions')
     .where({ project_id: projectId, role: member.role })
-    .select('permission');
+    .select('permission')
 
-  const permissions = new Set(permRows.map(r => r.permission));
+  const permissions = new Set(permRows.map((r) => r.permission))
 
-  return { role: member.role, permissions };
+  return { role: member.role, permissions }
 }
 ```
 
@@ -283,6 +299,7 @@ All permission data flows from the server through API endpoints. The client neve
 ```
 
 **Key design:**
+
 - Takes `permissions` (user's actual permissions from server) instead of `role`
 - Checks against the actual permissions set, not computed from role
 - Requires a single permission (not an array)
@@ -293,6 +310,7 @@ All permission data flows from the server through API endpoints. The client neve
 **API Endpoint**: `GET /api/projects/:id/permissions/me`
 
 **Response**:
+
 ```json
 {
   "projectId": "proj_123",
@@ -340,6 +358,7 @@ All permission data flows from the server through API endpoints. The client neve
 ```
 
 **Benefits of this approach:**
+
 - Single source of truth (server determines permissions)
 - No client-side permission logic to keep in sync
 - Works correctly even if permission matrix is customized per project
@@ -390,23 +409,13 @@ Frontend route that displays the permission matrix editor
 **Required Permission**: `projects:write`
 
 **Response**:
+
 ```json
 {
   "matrix": {
-    "admin": [
-      "projects:read",
-      "projects:write",
-      "tasks:read",
-      "tasks:write"
-    ],
-    "member": [
-      "projects:read",
-      "tasks:read",
-      "tasks:write"
-    ],
-    "viewer": [
-      "tasks:read"
-    ]
+    "admin": ["projects:read", "projects:write", "tasks:read", "tasks:write"],
+    "member": ["projects:read", "tasks:read", "tasks:write"],
+    "viewer": ["tasks:read"]
   }
 }
 ```
@@ -416,18 +425,16 @@ Frontend route that displays the permission matrix editor
 **Required Permission**: `projects:write`
 
 **Request Body**:
+
 ```json
 {
   "role": "member",
-  "permissions": [
-    "projects:read",
-    "tasks:read",
-    "tasks:write"
-  ]
+  "permissions": ["projects:read", "tasks:read", "tasks:write"]
 }
 ```
 
 **Validation Rules**:
+
 - Cannot modify `admin` role
 - Role must exist in the project
 - Permissions must be valid (from predefined set)
@@ -467,7 +474,7 @@ export const DEFAULT_ROLE_PERMISSIONS = {
   admin: ['projects:read', 'projects:write', 'members:write', 'tasks:read', 'tasks:write'],
   member: ['projects:read', 'tasks:read', 'tasks:write'],
   viewer: ['projects:read', 'tasks:read'],
-} as const;
+} as const
 ```
 
 **File**: `backend/db/queries.ts`
@@ -510,6 +517,7 @@ export async function createProject(userId: string, input: CreateProjectInput) {
 ```
 
 **Key Points:**
+
 - `DEFAULT_ROLE_PERMISSIONS` is **server-only**
 - Used **only once** when creating a new project
 - After creation, permissions are managed via the database and permission matrix UI
@@ -518,20 +526,24 @@ export async function createProject(userId: string, input: CreateProjectInput) {
 ## Security Considerations
 
 ### 1. Admin Role Protection
+
 - Admin permissions are immutable
 - API rejects attempts to modify admin permissions
 - UI shows admin checkboxes as disabled
 
 ### 2. Information Disclosure Prevention
+
 - Return **404** (not 403) when user is not a project member
 - Prevents revealing project existence to unauthorized users
 
 ### 3. Defense in Depth
+
 - Permission checks in middleware (enforces for all routes)
 - Permission checks in handlers (explicit verification)
 - Permission checks in UI (prevents unauthorized actions from being displayed)
 
 ### 4. Audit Logging
+
 - Log all permission denials with context:
   - User ID
   - Project ID
@@ -540,31 +552,37 @@ export async function createProject(userId: string, input: CreateProjectInput) {
   - Requested endpoint
 
 ### 5. Type Safety
+
 - All permissions are compile-time checked
 - TypeScript prevents typos in permission names
 - Route configuration validated at build time
 
 ### 6. SQL Injection Prevention
+
 - All queries use Knex query builder (parameterized)
 - No raw SQL with user input
 
 ## Performance Considerations
 
 ### 1. Permission Caching
+
 - **Scope**: Per-request only (middleware attaches to request context)
 - **Invalidation**: Automatic (new request = new cache)
 - **Admin Fast Path**: Bypass DB query for admin role
 
 ### 2. Database Indexes
+
 - Composite index on `(project_id, role)` for fast lookups
 - Unique index on `(project_id, role, permission)` prevents duplicates
 
 ### 3. Query Optimization
+
 - Single query to fetch all permissions for a role
 - Batch inserts when seeding permissions (100 rows per batch)
 - Join `project_members` + `project_role_permissions` where possible
 
 ### 4. UI Performance
+
 - Permission data loaded once per project view via API call
 - Permissions stored in frontend state management for efficient access by all child components
 - No client-side computation or permission lookups
@@ -574,6 +592,7 @@ export async function createProject(userId: string, input: CreateProjectInput) {
 ## Future Enhancements
 
 ### Phase 2: Custom Roles
+
 - Allow projects to create custom roles beyond the three defaults
 - UI for creating and naming custom roles
 - Assign permissions to custom roles via the matrix
@@ -581,16 +600,19 @@ export async function createProject(userId: string, input: CreateProjectInput) {
 ## Testing Requirements
 
 ### Unit Tests
+
 - Permission validation logic
 - Route pattern matching
 - Permission checker utility functions
 
 ### Integration Tests
+
 - API endpoints with different roles
 - Verify correct status codes (401, 403, 404)
 - Permission matrix CRUD operations
 
 ### E2E Tests
+
 - Create project and verify creator is admin
 - Navigate to settings and modify permissions
 - Verify UI actions show/hide based on role
@@ -600,15 +622,14 @@ export async function createProject(userId: string, input: CreateProjectInput) {
 
 ```typescript
 // Projects
-'projects:read'            // View project details
-'projects:write'           // Edit project name/description/settings
+'projects:read' // View project details
+'projects:write' // Edit project name/description/settings
 
 // Members
-'members:read'            // View comments
-'members:write'           // Create and edit comments
+'members:read' // View comments
+'members:write' // Create and edit comments
 
 // Tasks
-'tasks:read'               // View tasks
-'tasks:write'              // Create and edit tasks
+'tasks:read' // View tasks
+'tasks:write' // Create and edit tasks
 ```
-

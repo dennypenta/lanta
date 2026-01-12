@@ -1,7 +1,7 @@
 import { z } from 'zod'
 
 // Project member roles
-export const memberRoleSchema = z.enum([ 'admin', 'member', 'viewer'])
+export const memberRoleSchema = z.enum(['admin', 'member', 'viewer'])
 
 // Base project member schema
 export const projectMemberSchema = z.object({

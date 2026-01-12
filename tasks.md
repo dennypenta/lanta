@@ -1,9 +1,11 @@
 # Lanta - Task Manager Implementation Plan
 
 ## Project Overview
+
 Multi-tenant kanban board (Trello/Linear-like).
 
 **Tech Stack:**
+
 - Frontend: solid
 - Components: ark ui
 - Styling: tailwind
@@ -18,6 +20,7 @@ Multi-tenant kanban board (Trello/Linear-like).
 ## Phase 1: Foundation & Infrastructure
 
 ### 1.1 Development Environment Setup
+
 - [x] Setup Bun backend project structure
 - [x] Setup solid frontend project structure
 - [x] Configure development servers with hot reload
@@ -26,6 +29,7 @@ Multi-tenant kanban board (Trello/Linear-like).
 **Dependencies:** None
 
 ### 1.2 Database Layer
+
 - [x] Setup drizzle
 - [x] Create database schema (see Phase 2 for details)
 - [x] Setup migration system
@@ -34,16 +38,18 @@ Multi-tenant kanban board (Trello/Linear-like).
 **Dependencies:** 1.1
 
 ### 1.3 API Infrastructure
+
 - [x] Setup HTTP server with Bun
 - [x] Configure API routing structure
+- [ ] Setup oRPC transport to prepare for middlewares, move the existing fetch function to a designated cors middleware, establish a basic vitest foundation
 - [ ] Setup error handling middleware and structured logging
-- [ ] Implement native bun middlewares
 - [x] Configure CORS and security headers
 - [x] Implement GET /health endpoint (responds with 200 OK)
 
 **Dependencies:** 1.1, 1.2
 
 ### 1.4 UI Foundation
+
 - [ ] Choose and setup UI component library ark ui
 - [ ] Configure Tailwind CSS for solid
 - [ ] Create base layout components (Header, Sidebar, Main)
@@ -57,6 +63,7 @@ Multi-tenant kanban board (Trello/Linear-like).
 ## Phase 2: Core Data Models & Authentication
 
 ### 2.1 Database Schema Design
+
 ```
 Tables:
 - projects (id, tenant_id, name, description, created_at, updated_at)
@@ -70,6 +77,7 @@ Tables:
 **Dependencies:** 1.2
 
 ### 2.2 Authentication System
+
 - [ ] Setup session management (cookies) using better_auth
 - [ ] Implement POST /api/auth/signup endpoint
 - [ ] Implement POST /api/auth/signin endpoint
@@ -82,6 +90,7 @@ Tables:
 **Dependencies:** 2.1, 1.3
 
 ### 2.3 User Whitelist System
+
 - [ ] Create API endpoint: POST /api/tenants/:tenantId/whitelist (add email)
 - [ ] Create API endpoint: DELETE /api/tenants/:tenantId/whitelist/:id (remove email)
 - [ ] Create API endpoint: GET /api/tenants/:tenantId/whitelist (list whitelisted emails)
@@ -96,6 +105,7 @@ Tables:
 ## Phase 3: RBAC (Role-Based Access Control)
 
 ### 3.1 Permission System Design
+
 ```
 Roles:
 - tenant_owner: full access to tenant
@@ -128,6 +138,7 @@ Permissions:
 **Dependencies:** 2.1
 
 ### 3.2 Tenant & Project Membership
+
 - [ ] Create API endpoint: POST /api/tenants/:tenantId/members (add user to tenant)
 - [ ] Create API endpoint: PATCH /api/tenants/:tenantId/members/:userId (update role)
 - [ ] Create API endpoint: DELETE /api/tenants/:tenantId/members/:userId (remove user)
@@ -143,6 +154,7 @@ Permissions:
 ## Phase 4: Multi-Tenancy & Projects
 
 ### 4.1 Tenant Management
+
 - [ ] Create API endpoint: POST /api/tenants (create tenant)
 - [ ] Create API endpoint: GET /api/tenants (list user's tenants)
 - [ ] Create API endpoint: GET /api/tenants/:tenantId (get tenant details)
@@ -156,6 +168,7 @@ Permissions:
 **Dependencies:** 2.1, 2.2, 3.1
 
 ### 4.2 Project Management
+
 - [ ] Create API endpoint: POST /api/tenants/:tenantId/projects (create project)
 - [ ] Create API endpoint: GET /api/tenants/:tenantId/projects (list projects)
 - [ ] Create API endpoint: GET /api/projects/:projectId (get project details)
@@ -175,6 +188,7 @@ Permissions:
 ## Phase 5: Kanban Board Core
 
 ### 5.1 Column Management
+
 - [ ] Create API endpoint: POST /api/projects/:projectId/columns (create column)
 - [ ] Create API endpoint: GET /api/projects/:projectId/columns (list columns)
 - [ ] Create API endpoint: PATCH /api/columns/:columnId (update column name)
@@ -188,6 +202,7 @@ Permissions:
 **Dependencies:** 4.2, 3.1
 
 ### 5.2 Task Management
+
 - [ ] Create API endpoint: POST /api/projects/:projectId/tasks (create task)
 - [ ] Create API endpoint: GET /api/projects/:projectId/tasks (list tasks)
 - [ ] Create API endpoint: GET /api/tasks/:taskId (get task details)
@@ -212,6 +227,7 @@ Permissions:
 ## Phase 6: Background Worker & Backups
 
 ### 6.1 Background Worker Infrastructure
+
 - [ ] Create worker process/thread in Bun
 - [ ] Setup job queue system (in-memory or SQLite-based)
 - [ ] Create worker scheduler (cron-like)
@@ -221,6 +237,7 @@ Permissions:
 **Dependencies:** 1.2, 1.3
 
 ### 6.2 Database Backup System
+
 - [ ] Create backup job scheduler (daily/weekly configurable)
 - [ ] Implement SQLite database snapshot creation
 - [ ] Create backup destination abstraction layer
@@ -240,6 +257,7 @@ Permissions:
 ## Phase 7: Polish & Production Readiness
 
 ### 7.1 Testing
+
 - [ ] Write unit tests for business logic
 - [ ] Write integration tests for API endpoints
 - [ ] Write E2E tests for critical user flows
@@ -250,6 +268,7 @@ Permissions:
 **Dependencies:** All previous phases
 
 ### 7.2 Documentation & Deployment
+
 - [ ] Complete OpenAPI specification
 - [ ] Write API documentation
 - [ ] Create user guide
@@ -266,7 +285,8 @@ Permissions:
 ## Phase 8: AI native
 
 ### Render project as a markdown
-- [ ] Implement API to render the board as a md file 
+
+- [ ] Implement API to render the board as a md file
 - [ ] Add a button to a board "Copy as .md" to copy the content to clipboard
 
 ---
@@ -290,6 +310,7 @@ Phase 1 → Phase 2 → Phase 3 → Phase 4 → Phase 5 → Phase 6 → Phase 7
 ```
 
 **Key Decision Points:**
+
 1. **Backend framework:** Choose between Hono, Elysia, Express, or other Bun-compatible framework
 2. **UI component library:** shadcn-solid or alternative for solid
 3. **Authentication library:** better-auth, custom JWT, or other

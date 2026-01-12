@@ -5,6 +5,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 ## Phase 1: Database Schema & Core Types
 
 ### Task 1.1: Create project_role_permissions Table Migration
+
 - [ ] Create migration file: `bun run db:migrate:make create_project_role_permissions`
 - [ ] Add table schema with columns:
   - `id` VARCHAR(36) PRIMARY KEY
@@ -19,6 +20,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Verify table creation in SQLite database
 
 ### Task 1.2: Define Permission Types
+
 - [ ] Create file: `backend/rbac/permissions.ts`
 - [ ] Define `Permission` type with all permissions:
   - `projects:read`
@@ -30,6 +32,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Export `Role` type: `'admin' | 'member' | 'viewer'`
 
 ### Task 1.3: Create Default Permissions Configuration (Server-Only)
+
 - [ ] Create file: `backend/rbac/default-permissions.ts`
 - [ ] Define `DEFAULT_ROLE_PERMISSIONS` constant with mappings:
   - `admin`: all permissions
@@ -40,6 +43,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 ## Phase 2: Permission Checking Utilities
 
 ### Task 2.1: Implement getUserPermissions Function
+
 - [ ] Create file: `backend/rbac/permission-checker.ts`
 - [ ] Implement `getUserPermissions(projectId: string, userId: string)`:
   - Query `project_members` for user's role
@@ -50,6 +54,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Add error handling for database errors
 
 ### Task 2.2: Create Route Permission Rules
+
 - [ ] Create file: `backend/rbac/route-permissions.ts`
 - [ ] Define `RoutePermissionRule` interface with:
   - `pattern: RegExp`
@@ -66,6 +71,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 ## Phase 3: Middleware Implementation
 
 ### Task 3.1: Define Request Context Types
+
 - [ ] Create type definitions for request context
 - [ ] Add `projectContext` to request type:
   ```typescript
@@ -78,6 +84,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Ensure type safety across the application
 
 ### Task 3.2: Implement Permission Enforcement Middleware
+
 - [ ] Create file: `backend/rbac/enforce-permissions.ts`
 - [ ] Import required utilities (getUserPermissions, route-permissions, logger)
 - [ ] Implement `enforcePermissions` middleware function:
@@ -93,6 +100,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Export middleware function
 
 ### Task 3.3: Integrate Middleware into Pipeline
+
 - [ ] Add `enforcePermissions` middleware to the API server
 - [ ] Ensure middleware runs in correct order:
   - Authentication middleware
@@ -105,6 +113,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 ## Phase 4: Project Creation with RBAC Seeding
 
 ### Task 4.1: Update createProject Function
+
 - [ ] Edit `backend/db/queries.ts` (or create if doesn't exist)
 - [ ] Import `DEFAULT_ROLE_PERMISSIONS` from `backend/rbac/default-permissions`
 - [ ] Update `createProject()` function to use transaction:
@@ -116,6 +125,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Return created project with ID
 
 ### Task 4.2: Test Project Creation Flow
+
 - [ ] Create E2E test: `tests/e2e/rbac/project-creation.spec.ts`
 - [ ] Test that new project:
   - Creates project record
@@ -127,6 +137,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 ## Phase 5: API Endpoints for Permission Management
 
 ### Task 5.1: GET /api/projects/:id/permissions Endpoint
+
 - [ ] Create API route handler for `GET /api/projects/:id/permissions`
 - [ ] Implement handler:
   - Verify user has `projects:write` permission (via projectContext)
@@ -136,6 +147,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Add error handling for missing project
 
 ### Task 5.2: PUT /api/projects/:id/permissions Endpoint
+
 - [ ] Create API route handler for `PUT /api/projects/:id/permissions`
 - [ ] Implement handler:
   - Validate request body (role and permissions array)
@@ -149,6 +161,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Add logging for permission changes
 
 ### Task 5.3: GET /api/projects/:id/permissions/me Endpoint
+
 - [ ] Create API route handler for `GET /api/projects/:id/permissions/me`
 - [ ] Implement handler:
   - Get current user's permissions for the project
@@ -157,6 +170,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] This endpoint is used by frontend to fetch permissions on page load
 
 ### Task 5.4: Test Permission Management APIs
+
 - [ ] Create integration tests for permission management endpoints
 - [ ] Test GET /permissions endpoint returns correct permission matrix
 - [ ] Test PUT endpoint successfully updates permissions
@@ -169,6 +183,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 ## Phase 6: UI Components
 
 ### Task 6.1: Create PermissionGate Component
+
 - [ ] Create file: `frontend/components/PermissionGate.svelte`
 - [ ] Define props interface:
   - `permissions: Set<Permission>` (user's actual permissions from server)
@@ -181,6 +196,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Add JSDoc comments explaining usage
 
 ### Task 6.2: Create Permission Fetching Logic
+
 - [ ] Create API client function to fetch user permissions
 - [ ] Implement `fetchUserPermissions(projectId: string)`:
   - Call `GET /api/projects/:id/permissions/me`
@@ -189,6 +205,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Add TypeScript types for API response
 
 ### Task 6.3: Implement Permission State Management
+
 - [ ] Create state management for permissions in project view
 - [ ] Fetch permissions when project view loads
 - [ ] Store permissions in component state or global store
@@ -196,6 +213,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Handle loading and error states
 
 ### Task 6.4: Add PermissionGate to Existing UI
+
 - [ ] Identify components that need permission gates:
   - Project edit buttons (requires `projects:write`)
   - Task create/edit buttons (requires `tasks:write`)
@@ -209,6 +227,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 ## Phase 7: Settings Page - Permission Matrix Editor
 
 ### Task 7.1: Create Settings Page Component
+
 - [ ] Create file: `frontend/pages/ProjectSettings.svelte`
 - [ ] Import necessary components (PermissionGate, Button, etc.)
 - [ ] Get permissions from state/context
@@ -216,6 +235,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Create basic page structure with title "Role & Permission Settings"
 
 ### Task 7.2: Fetch and Display Permission Matrix
+
 - [ ] Fetch permission matrix from `GET /api/projects/:id/permissions` on mount
 - [ ] Create UI table structure:
   - Header row with role columns (Admin, Member, Viewer)
@@ -226,6 +246,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Handle loading and error states
 
 ### Task 7.3: Implement Permission Updates
+
 - [ ] Add checkbox change handlers
 - [ ] Implement optimistic UI updates
 - [ ] Call PUT `/api/projects/:id/permissions` on change
@@ -234,6 +255,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Show success feedback after save
 
 ### Task 7.4: Add Permission Descriptions
+
 - [ ] Create a mapping of permissions to user-friendly descriptions
 - [ ] Display descriptions as tooltips or help text next to each permission
 - [ ] Use consistent language:
@@ -246,6 +268,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 ## Phase 8: Testing & Validation
 
 ### Task 8.1: Unit Tests for Permission Utilities
+
 - [ ] Create `backend/rbac/permission-checker.test.ts`
 - [ ] Test `getUserPermissions()`:
   - Returns empty permissions for non-members
@@ -255,6 +278,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 - [ ] Mock database queries appropriately
 
 ### Task 8.2: Unit Tests for Route Permissions
+
 - [ ] Create `backend/rbac/route-permissions.test.ts`
 - [ ] Test `getRequiredPermissions()`:
   - Returns null for routes without permissions
@@ -265,6 +289,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
   - Returns null for non-project URLs
 
 ### Task 8.3: Integration Tests for Middleware
+
 - [ ] Create integration tests for permission enforcement middleware
 - [ ] Test middleware behavior:
   - Allows requests without permission requirements
@@ -274,6 +299,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
   - Logs permission denials correctly
 
 ### Task 8.4: E2E Tests for Permission Gates
+
 - [ ] Create E2E tests for permission gate functionality
 - [ ] Test as admin:
   - All UI elements visible
@@ -287,6 +313,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
   - Can only view content
 
 ### Task 8.5: E2E Tests for Settings Page
+
 - [ ] Create E2E tests for permission matrix editor
 - [ ] Test as admin:
   - Can access settings page
@@ -298,6 +325,7 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
   - Cannot access settings page (404 or hidden link)
 
 ### Task 8.6: Security Testing
+
 - [ ] Test information disclosure:
   - Non-members receive 404, not 403
   - Project existence not revealed to unauthorized users
@@ -313,22 +341,26 @@ This document provides a step-by-step implementation plan for the Role-Based Acc
 ## Testing Checklist Summary
 
 ### Unit Tests
+
 - [ ] Permission checker utilities
 - [ ] Route permission matching
 - [ ] Project ID extraction
 
 ### Integration Tests
+
 - [ ] Middleware pipeline
 - [ ] Database queries
 - [ ] API endpoints
 
 ### E2E Tests
+
 - [ ] Project creation with permission seeding
 - [ ] Permission management via settings page
 - [ ] UI permission gates for different roles
 - [ ] Security (404 for non-members, 403 for unauthorized)
 
 ### Manual Testing
+
 - [ ] Test as admin, member, and viewer roles
 - [ ] Test permission matrix changes
 - [ ] Test concurrent users

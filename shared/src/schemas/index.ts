@@ -1,3 +1,3 @@
 // Export all schemas
-export * from "./project";
-export * from "./member";
+export * from './member'
+export * from './project'

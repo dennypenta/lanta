@@ -1,9 +1,13 @@
 {
   "name": "lanta",
   "type": "module",
-  "workspaces": ["api", "web", "shared"],
+  "workspaces": [
+    "api",
+    "web",
+    "shared"
+  ],
   "scripts": {
-    "dev:api": "bun --cwd api dev",
+    "dev:api": "bun --cwd api --env-file=api/.env.local dev",
     "dev:web": "bun --cwd web dev",
     "dev": "bun --parallel dev:api dev:web",
     "lint": "eslint .",
@@ -24,9 +28,14 @@
     "prettier": "^3.7.4",
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "typescript-eslint": "^8.52.0"
+    "typescript-eslint": "^8.52.0",
+    "vitest": "^4.0.16"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "dependencies": {
+    "@orpc/client": "^1.13.2",
+    "@orpc/server": "^1.13.2"
   }
 }

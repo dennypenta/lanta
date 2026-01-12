@@ -16,9 +16,7 @@ export interface DBConfig {
 
 export function newDB(config: string | DBConfig): BunSQLiteDatabase {
   // Support both string and config object for backwards compatibility
-  const dbConfig: DBConfig = typeof config === 'string'
-    ? { dbFileName: config }
-    : config
+  const dbConfig: DBConfig = typeof config === 'string' ? { dbFileName: config } : config
 
   const {
     dbFileName,
