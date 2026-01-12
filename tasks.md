@@ -53,9 +53,9 @@ Multi-tenant kanban board (Trello/Linear-like).
 - [x] setup UI component library ark ui
 - [x] Configure Tailwind CSS for solid
 - [x] Create base layout  Sidebar
-- [ ] Create base layout  Header
-- [ ] Setup responsive design breakpoints
-- [ ] Extract a sidebar menu component from a sidebar
+- [x] Create base layout  Header
+- [x] Setup responsive design breakpoints
+- [x] Extract a sidebar menu component from a sidebar
 
 **Dependencies:** 1.1
 
