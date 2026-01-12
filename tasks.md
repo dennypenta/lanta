@@ -50,11 +50,12 @@ Multi-tenant kanban board (Trello/Linear-like).
 
 ### 1.4 UI Foundation
 
-- [ ] setup UI component library ark ui
+- [x] setup UI component library ark ui
 - [x] Configure Tailwind CSS for solid
-- [ ] Create base layout components (Header, Sidebar, Main)
+- [x] Create base layout  Sidebar
+- [ ] Create base layout  Header
 - [ ] Setup responsive design breakpoints
-- [ ] Configure build tooling (Vite) for solid
+- [ ] Extract a sidebar menu component from a sidebar
 
 **Dependencies:** 1.1
 
@@ -71,8 +72,8 @@ Tables:
 - tasks (id, column_id, project_id, title, description, assignee_id, position, created_at, updated_at)
 ```
 
-- [ ] Create migration for all the table
-- [ ] Add indexes for performance (project_id, etc.)
+- [x] Create migration for all the table
+- [x] Add indexes for performance (project_id, etc.)
 
 **Dependencies:** 1.2
 

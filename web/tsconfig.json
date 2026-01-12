@@ -5,6 +5,9 @@
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
 
+    // Include DOM types for browser environment
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+
     // Additional types for Vite
     "types": ["vite/client"]
   },
