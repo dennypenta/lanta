@@ -8,12 +8,12 @@
 
 ## 2. Backend - oRPC Authentication Handlers
 
-- [ ] 2.1 Create sign-up handler that returns "enter" response with profile
-- [ ] 2.2 Create sign-in handler that returns "enter" response with profile
-- [ ] 2.3 Create sign-out handler that clears cookies
-- [ ] 2.4 Create get-profile handler for fetching current user
-- [ ] 2.5 Add middleware to extract session from cookies and populate context
-- [ ] 2.6 Update router in `api/router.ts` with new handlers
+- [x] 2.1 Create sign-up handler that returns "enter" response with profile
+- [x] 2.2 Create sign-in handler that returns "enter" response with profile
+- [x] 2.3 Create sign-out handler that clears cookies
+- [x] 2.4 Create get-profile handler for fetching current user
+- [x] 2.5 Add middleware to extract session from cookies and populate context
+- [x] 2.6 Update router in `api/router.ts` with new handlers
 
 ## 3. Frontend - Dependencies and Setup
 

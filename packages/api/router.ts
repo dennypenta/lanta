@@ -7,15 +7,19 @@ import {
   SimpleCsrfProtectionHandlerPlugin,
 } from '@orpc/server/plugins'
 import { type Config } from './config/config.ts'
+import { authRouter } from './handlers/auth.ts'
 import { securityHeadersMiddleware } from './middlewares/headers.ts'
 import { loggingMiddleware } from './middlewares/logging.ts'
 
-// interface ORPCContext extends ResponseHeadersPluginContext {}
+// Extended context that includes request headers for auth
+export interface ORPCContext extends ResponseHeadersPluginContext {
+  reqHeaders?: Headers
+}
 
-export function newRPC(config: Config ) {
+export function newRPC(config: Config) {
   const secHeaders = securityHeadersMiddleware()
   const base = os
-    .$context<ResponseHeadersPluginContext>()
+    .$context<ORPCContext>()
     .use(loggingMiddleware(config.logLevel))
     .use(({ context, next }) => {
       for (const [key, val] of Object.entries(secHeaders)) {
@@ -27,6 +31,7 @@ export function newRPC(config: Config ) {
   const hello = base.handler(async () => 'hello')
   const router = {
     hello,
+    auth: authRouter,
   }
 
   return new RPCHandler(router, {

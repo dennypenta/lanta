@@ -10,8 +10,12 @@ const server = Bun.serve({
   port: config.port,
   routes: { '/health': new Response(null) },
   fetch: async (req) => {
-    // Handle oRPC requests
-    const result = await rpcHandler.handle(req)
+    // Handle oRPC requests with request headers in context
+    const result = await rpcHandler.handle(req, {
+      context: {
+        reqHeaders: req.headers,
+      },
+    })
     if (result.matched) {
       return result.response
     }
