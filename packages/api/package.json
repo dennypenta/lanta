@@ -5,9 +5,7 @@
     "dev": "bun index.ts",
     "start": "bun index.ts",
     "migrate:generate": "drizzle-kit generate",
-    "migrate:migrate": "drizzle-kit migrate",
-    "auth:generate": "better-auth generate --config ../auth.config.ts --output auth/schema.ts",
-    "auth:migrate": "better-auth migrate --config ../auth.config.ts"
+    "migrate:migrate": "bun --env-file=.env.local drizzle-kit migrate"
   },
   "dependencies": {
     "@lanta/rpc": "workspace:*",

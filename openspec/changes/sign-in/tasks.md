@@ -2,9 +2,9 @@
 
 ## 1. Backend - Better Auth Setup
 
-- [ ] 1.1 Update `auth.config.ts` to enable email/password authentication
-- [ ] 1.2 Run migrations to generate Better Auth user tables (user, session, verification)
-- [ ] 1.3 Verify database schema includes necessary tables
+- [x] 1.1 Update `auth.config.ts` to enable email/password authentication
+- [x] 1.2 Run migrations to generate Better Auth user tables (user, session, verification)
+- [x] 1.3 Verify database schema includes necessary tables
 
 ## 2. Backend - oRPC Authentication Handlers
 

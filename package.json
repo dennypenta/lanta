@@ -13,9 +13,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "migrate:generate": "bun --cwd packages/api migrate:generate",
-    "migrate:migrate": "bun --cwd packages/api migrate:migrate",
-    "auth:generate": "bun --cwd packages/api auth:generate",
-    "auth:migrate": "bun --cwd packages/api auth:migrate"
+    "migrate:migrate": "cd packages/api && export $(cat .env.local | xargs) && npx drizzle-kit migrate"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
