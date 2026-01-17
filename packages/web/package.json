@@ -19,7 +19,7 @@
     "vite-plugin-solid": "^2.11.8"
   },
   "dependencies": {
-    "@lanta/shared": "workspace:*",
+    "@lanta/rpc": "workspace:*",
     "cva": "^1.0.0-beta.4",
     "lucide-solid": "^0.562.0",
     "solid-js": "^1.9.9",

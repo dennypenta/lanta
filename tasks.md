@@ -41,7 +41,7 @@ Multi-tenant kanban board (Trello/Linear-like).
 
 - [x] Setup HTTP server with Bun
 - [x] Configure API routing structure
-- [x] Setup oRPC transport to prepare for middlewares, move the existing fetch function to a designated cors middleware
+- [x] Setup oRPC rpc to prepare for middlewares, move the existing fetch function to a designated cors middleware
 - [x] Setup structured logging middleware
 - [x] Configure CORS and security headers
 - [x] Implement GET /health endpoint (responds with 200 OK)

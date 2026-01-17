@@ -1,4 +1,4 @@
-# @lanta/shared
+# @lanta/rpc
 
 Shared validation schemas, types, and utilities for Lanta monorepo.
 
@@ -7,7 +7,7 @@ Shared validation schemas, types, and utilities for Lanta monorepo.
 ### In API (Backend)
 
 ```typescript
-import { createProjectSchema, type Project } from '@lanta/shared/schemas'
+import { createProjectSchema, type Project } from '@lanta/rpc/schemas'
 import { z } from 'zod'
 
 // Validate request body
@@ -23,7 +23,7 @@ app.post('/api/projects', async (req) => {
 ### In Web (Frontend)
 
 ```typescript
-import { createProjectSchema, type CreateProject } from "@lanta/shared/schemas";
+import { createProjectSchema, type CreateProject } from "@lanta/rpc/schemas";
 import { createSignal } from "solid-js";
 
 function CreateProjectForm() {
@@ -57,7 +57,7 @@ function CreateProjectForm() {
 ### Using Types Only
 
 ```typescript
-import type { Project, ApiResponse } from '@lanta/shared/types'
+import type { Project, ApiResponse } from '@lanta/rpc/types'
 
 const fetchProjects = async (): Promise<ApiResponse<Project[]>> => {
   const response = await fetch('/api/projects')
@@ -68,7 +68,7 @@ const fetchProjects = async (): Promise<ApiResponse<Project[]>> => {
 ## Structure
 
 ```
-shared/
+rpc/
 ├── src/
 │   ├── schemas/       # Zod validation schemas
 │   │   ├── project.ts

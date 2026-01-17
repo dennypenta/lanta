@@ -1,5 +1,5 @@
 {
-  "name": "@lanta/shared",
+  "name": "@lanta/rpc",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",

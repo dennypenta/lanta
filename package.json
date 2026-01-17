@@ -2,22 +2,20 @@
   "name": "lanta",
   "type": "module",
   "workspaces": [
-    "api",
-    "web",
-    "shared"
+    "packages/*"
   ],
   "scripts": {
-    "dev:api": "bun --cwd api --hot --env-file=api/.env.local dev",
-    "dev:web": "bun --cwd web --hot dev",
+    "dev:api": "bun --cwd packages/api --hot --env-file=packages/api/.env.local dev",
+    "dev:web": "bun --cwd packages/web --hot dev",
     "dev": "bun --parallel dev:api dev:web",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "migrate:generate": "bun --cwd api migrate:generate",
-    "migrate:migrate": "bun --cwd api migrate:migrate",
-    "auth:generate": "bun --cwd api auth:generate",
-    "auth:migrate": "bun --cwd api auth:migrate"
+    "migrate:generate": "bun --cwd packages/api migrate:generate",
+    "migrate:migrate": "bun --cwd packages/api migrate:migrate",
+    "auth:generate": "bun --cwd packages/api auth:generate",
+    "auth:migrate": "bun --cwd packages/api auth:migrate"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
