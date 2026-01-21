@@ -1,29 +1,10 @@
+import { Elysia } from 'elysia'
 import newConfig from './config/config.ts'
-import { newRPC } from './router.ts'
 
 const config = newConfig()
 
-// Create oRPC RPC handler
-const rpcHandler = newRPC(config)
-
-const server = Bun.serve({
-  port: config.port,
-  routes: { '/health': new Response(null) },
-  fetch: async (req) => {
-    // Handle oRPC requests with request headers in context
-    const result = await rpcHandler.handle(req, {
-      context: {
-        reqHeaders: req.headers,
-      },
-    })
-    if (result.matched) {
-      return result.response
-    }
-
-    // 404 fallback
-    return new Response(null, { status: 404 })
-  },
-})
+const app = new Elysia().get('/health', () => 'Hello Elysia').listen(config.port)
+const server = app.server!
 
 console.log(`Server running at ${server.url}`)
 
