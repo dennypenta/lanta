@@ -8,8 +8,8 @@ export const userProfileSchema = t.Object({
   name: t.String(),
   email: t.String({ format: 'email' }),
   emailVerified: t.Boolean(),
-  createdAt: t.String({ format: 'date-time' }),
-  updatedAt: t.String({ format: 'date-time' }),
+  createdAt: t.Date(),
+  updatedAt: t.Date(),
 })
 
 export const signUpInputSchema = t.Object({

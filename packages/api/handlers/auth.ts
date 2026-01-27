@@ -9,28 +9,9 @@ import {
   type AuthEnterResponse,
   type ProfileResponse,
   type SignOutResponse,
-  type UserProfile,
 } from '@lanta/rpc/schemas'
 
 import { auth } from '../auth.config.ts'
-
-function mapUserToProfile(user: {
-  id: string
-  name: string
-  email: string
-  emailVerified: boolean
-  createdAt: Date
-  updatedAt: Date
-}): UserProfile {
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    emailVerified: user.emailVerified,
-    createdAt: user.createdAt.toISOString(),
-    updatedAt: user.updatedAt.toISOString(),
-  }
-}
 
 export const authRoutes = new Elysia({ prefix: '/auth' })
   .post(
@@ -52,7 +33,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
       }
 
       return {
-        user: mapUserToProfile(result.response.user),
+        user: result.response.user,
       }
     },
     {
@@ -78,7 +59,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
       }
 
       return {
-        user: mapUserToProfile(result.response.user),
+        user: result.response.user,
       }
     },
     {
@@ -116,7 +97,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
         return null
       }
 
-      return mapUserToProfile(session.user)
+      return session.user
     },
     {
       response: profileResponseSchema,
