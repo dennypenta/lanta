@@ -57,11 +57,11 @@ The system SHALL redirect users to their intended destination after successful a
 
 ### Requirement: UNAUTHORIZED Error Handling
 
-The system SHALL handle UNAUTHORIZED errors from oRPC by redirecting to sign-in.
+The system SHALL handle UNAUTHORIZED errors from API by redirecting to sign-in.
 
 #### Scenario: UNAUTHORIZED error from RPC call
 
-- **WHEN** an oRPC handler returns an UNAUTHORIZED error code
+- **WHEN** an API handler returns an UNAUTHORIZED error code
 - **THEN** the frontend stores the current location as intended destination
 - **AND** redirects the user to the sign-in page using history replacement
 - **AND** the user cannot navigate back to the previous page
@@ -123,7 +123,7 @@ The system SHALL display the authenticated user's profile in the application hea
 #### Scenario: Sign-out from dropdown
 
 - **WHEN** a user clicks sign-out from the dropdown menu
-- **THEN** the system calls the sign-out oRPC handler
+- **THEN** the system calls the sign-out API handler
 - **AND** redirects to the sign-in page using history replacement
 - **AND** clears the user's profile from the header
 

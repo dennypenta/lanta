@@ -6,19 +6,19 @@
 - [x] 1.2 Run migrations to generate Better Auth user tables (user, session, verification)
 - [x] 1.3 Verify database schema includes necessary tables
 
-## 2. Backend - oRPC Authentication Handlers
+## 2. Backend - Authentication Handlers
 
 - [x] 2.1 Create sign-up handler that returns "enter" response with profile
 - [x] 2.2 Create sign-in handler that returns "enter" response with profile
 - [x] 2.3 Create sign-out handler that clears cookies
 - [x] 2.4 Create get-profile handler for fetching current user
 - [x] 2.5 Add middleware to extract session from cookies and populate context
-- [x] 2.6 Update router in `api/router.ts` with new handlers
+- [x] 2.6 Update router in packages/api/index.ts
 
 ## 3. Frontend - Dependencies and Setup
 
 - [ ] 3.1 Add @solidjs/router to web/package.json
-- [ ] 3.2 Create `web/src/lib/rpc.ts` for oRPC client initialization
+- [ ] 3.2 Create `web/src/lib/api.ts` for Eden Treaty client initialization
 - [ ] 3.3 Install and verify dependencies
 
 ## 4. Frontend - Authentication Pages

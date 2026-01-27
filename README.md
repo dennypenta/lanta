@@ -26,7 +26,7 @@ Task management application.
 - [ ] setup basic client router
 - [ ] setup basic ui
 
-- [ ] setup basic orpc
+- [x] setup Elysia Eden for type-safe API client
 
 - [ ] sign in
 - [ ] sign up

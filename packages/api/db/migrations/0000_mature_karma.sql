@@ -56,7 +56,6 @@ CREATE TABLE `user` (
 	`name` text NOT NULL,
 	`email` text NOT NULL,
 	`email_verified` integer DEFAULT false NOT NULL,
-	`image` text,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL
 );

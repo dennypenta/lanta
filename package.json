@@ -29,9 +29,5 @@
   },
   "peerDependencies": {
     "typescript": "^5"
-  },
-  "dependencies": {
-    "@orpc/client": "^1.13.2",
-    "@orpc/server": "^1.13.2"
   }
 }

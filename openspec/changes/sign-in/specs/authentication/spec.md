@@ -94,7 +94,7 @@ The system SHALL use Better Auth with Drizzle adapter for all authentication ope
 
 ### Requirement: Authentication API Structure
 
-The system SHALL expose authentication operations through oRPC handlers.
+The system SHALL expose authentication operations through Elysia route handlers.
 
 #### Scenario: Sign-up handler
 

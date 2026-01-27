@@ -1,134 +1,110 @@
-import { os } from '@orpc/server'
-import type { ResponseHeadersPluginContext } from '@orpc/server/plugins'
-import { Type } from 'typebox'
-
-import {
-  authEnterResponseSchema,
-  signInInputSchema,
-  signUpInputSchema,
-  userProfileSchema,
-} from '@lanta/rpc'
+import { Elysia, t } from 'elysia'
 
 import { auth } from '../auth.config.ts'
 
-// Context type that includes request headers (matches ORPCContext in router.ts)
-export interface AuthContext extends ResponseHeadersPluginContext {
-  reqHeaders?: Headers
-}
-
-// Base OS with auth context
-const authBase = os.$context<AuthContext>()
-
-// Helper to copy headers from Better Auth response to oRPC response
-function copySetCookieHeaders(fromHeaders: Headers | null, toHeaders?: Headers) {
-  if (!fromHeaders || !toHeaders) return
-  const cookies = fromHeaders.getSetCookie()
-  for (const cookie of cookies) {
-    toHeaders.append('set-cookie', cookie)
+// Helper to map Better Auth user to our profile shape
+function mapUserToProfile(user: {
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  createdAt: Date
+  updatedAt: Date
+}) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    emailVerified: user.emailVerified,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
   }
 }
 
-// Sign-up handler
-export const signUp = authBase
-  .input(signUpInputSchema)
-  .output(authEnterResponseSchema)
-  .handler(async ({ input, context }) => {
-    const result = await auth.api.signUpEmail({
-      body: {
-        name: input.name,
-        email: input.email,
-        password: input.password,
-      },
-      headers: context.reqHeaders,
-      returnHeaders: true,
-    })
+// Auth routes as Elysia plugin
+export const authRoutes = new Elysia({ prefix: '/auth' })
+  .post(
+    '/sign-up',
+    async ({ body, request, set }) => {
+      const result = await auth.api.signUpEmail({
+        body: {
+          name: body.name,
+          email: body.email,
+          password: body.password,
+        },
+        headers: request.headers,
+        returnHeaders: true,
+      })
 
-    copySetCookieHeaders(result.headers, context.resHeaders)
+      // Copy session cookies to response
+      const cookies = result.headers?.getSetCookie() ?? []
+      for (const cookie of cookies) {
+        set.headers['set-cookie'] = cookie
+      }
 
-    return {
-      type: 'enter' as const,
-      user: {
-        id: result.response.user.id,
-        name: result.response.user.name,
-        email: result.response.user.email,
-        emailVerified: result.response.user.emailVerified,
-        image: result.response.user.image ?? null,
-        createdAt: result.response.user.createdAt,
-        updatedAt: result.response.user.updatedAt,
-      },
-    }
-  })
+      return {
+        user: mapUserToProfile(result.response.user),
+      }
+    },
+    {
+      body: t.Object({
+        name: t.String({ minLength: 1 }),
+        email: t.String({ format: 'email' }),
+        password: t.String({ minLength: 4 }),
+      }),
+    },
+  )
+  .post(
+    '/sign-in',
+    async ({ body, request, set }) => {
+      const result = await auth.api.signInEmail({
+        body: {
+          email: body.email,
+          password: body.password,
+        },
+        headers: request.headers,
+        returnHeaders: true,
+      })
 
-// Sign-in handler
-export const signIn = authBase
-  .input(signInInputSchema)
-  .output(authEnterResponseSchema)
-  .handler(async ({ input, context }) => {
-    const result = await auth.api.signInEmail({
-      body: {
-        email: input.email,
-        password: input.password,
-      },
-      headers: context.reqHeaders,
-      returnHeaders: true,
-    })
+      // Copy session cookies to response
+      const cookies = result.headers?.getSetCookie() ?? []
+      for (const cookie of cookies) {
+        set.headers['set-cookie'] = cookie
+      }
 
-    copySetCookieHeaders(result.headers, context.resHeaders)
-
-    return {
-      type: 'enter' as const,
-      user: {
-        id: result.response.user.id,
-        name: result.response.user.name,
-        email: result.response.user.email,
-        emailVerified: result.response.user.emailVerified,
-        image: result.response.user.image ?? null,
-        createdAt: result.response.user.createdAt,
-        updatedAt: result.response.user.updatedAt,
-      },
-    }
-  })
-
-// Sign-out handler
-export const signOut = authBase
-  .output(Type.Object({ success: Type.Boolean() }))
-  .handler(async ({ context }) => {
+      return {
+        user: mapUserToProfile(result.response.user),
+      }
+    },
+    {
+      body: t.Object({
+        email: t.String({ format: 'email' }),
+        password: t.String({ minLength: 4 }),
+      }),
+    },
+  )
+  .post('/sign-out', async ({ request, set }) => {
     const result = await auth.api.signOut({
-      headers: context.reqHeaders,
+      headers: request.headers,
       returnHeaders: true,
     })
 
-    copySetCookieHeaders(result.headers, context.resHeaders)
+    // Copy cookies to clear session
+    const cookies = result.headers?.getSetCookie() ?? []
+    for (const cookie of cookies) {
+      set.headers['set-cookie'] = cookie
+    }
 
     return { success: result.response.success }
   })
-
-// Get profile handler
-export const getProfile = authBase
-  .output(Type.Union([userProfileSchema, Type.Null()]))
-  .handler(async ({ context }) => {
+  .get('/profile', async ({ request }) => {
     const session = await auth.api.getSession({
-      headers: context.reqHeaders ?? new Headers(),
+      headers: request.headers,
     })
 
     if (!session) {
       return null
     }
 
-    return {
-      id: session.user.id,
-      name: session.user.name,
-      email: session.user.email,
-      emailVerified: session.user.emailVerified,
-      image: session.user.image ?? null,
-      createdAt: session.user.createdAt,
-      updatedAt: session.user.updatedAt,
-    }
+    return mapUserToProfile(session.user)
   })
-
-export const authRouter = {
-  signUp,
-  signIn,
-  signOut,
-  getProfile,
-}

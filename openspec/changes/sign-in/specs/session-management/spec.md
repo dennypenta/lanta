@@ -14,7 +14,7 @@ The system SHALL use HTTP cookies for session persistence.
 
 #### Scenario: Session cookie sent with requests
 
-- **WHEN** an authenticated user makes an oRPC request
+- **WHEN** an authenticated user makes an API request
 - **THEN** the browser automatically includes session cookies
 - **AND** the server extracts session information from cookies
 
@@ -24,19 +24,19 @@ The system SHALL use HTTP cookies for session persistence.
 - **THEN** the system clears session cookies from the response
 - **AND** subsequent requests are unauthenticated
 
-### Requirement: Session Context in oRPC Handlers
+### Requirement: Session Context in Route Handlers
 
-The system SHALL populate oRPC context with session information for authenticated requests.
+The system SHALL populate route handler context with session information for authenticated requests.
 
 #### Scenario: Authenticated request context
 
-- **WHEN** an oRPC handler receives a request with valid session cookies
+- **WHEN** a route handler receives a request with valid session cookies
 - **THEN** the middleware extracts the session
 - **AND** populates the context with user information (id, email, profile)
 
 #### Scenario: Unauthenticated request context
 
-- **WHEN** an oRPC handler receives a request without valid session cookies
+- **WHEN** a route handler receives a request without valid session cookies
 - **THEN** the context indicates no authenticated user
 - **AND** protected handlers return UNAUTHORIZED error
 
@@ -62,12 +62,12 @@ The system SHALL validate sessions on every request without maintaining server-s
 
 #### Scenario: Session validation on each request
 
-- **WHEN** an oRPC handler receives a request
+- **WHEN** a route handler receives a request
 - **THEN** Better Auth validates the session token from cookies
 - **AND** verification happens without querying a session store for active sessions
 
 #### Scenario: Invalid session token
 
-- **WHEN** an oRPC handler receives a request with an invalid or tampered session token
+- **WHEN** a route handler receives a request with an invalid or tampered session token
 - **THEN** the request is treated as unauthenticated
 - **AND** returns UNAUTHORIZED error for protected resources

@@ -10,7 +10,7 @@ Multi-tenant kanban board (Trello/Linear-like).
 - Components: ark ui
 - Styling: tailwind
 - Router: solid router
-- Backend: Bun API (Bun serve + orpc)
+- Backend: Bun API (Elysia + Eden Treaty)
 - Validation: Zod
 - Database: SQLite (with drizzle orm)
 - Identity: better_auth
@@ -41,7 +41,7 @@ Multi-tenant kanban board (Trello/Linear-like).
 
 - [x] Setup HTTP server with Bun
 - [x] Configure API routing structure
-- [x] Setup oRPC rpc to prepare for middlewares, move the existing fetch function to a designated cors middleware
+- [x] Setup Elysia routes with Eden Treaty for type-safe API client
 - [x] Setup structured logging middleware
 - [x] Configure CORS and security headers
 - [x] Implement GET /health endpoint (responds with 200 OK)

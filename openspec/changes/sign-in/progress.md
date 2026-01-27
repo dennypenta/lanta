@@ -34,4 +34,33 @@ The following auth tables are now available:
 - `account` - OAuth/credential accounts (id, providerId, userId, password, tokens, timestamps)
 - `verification` - Email verification tokens (id, identifier, value, expiresAt, timestamps)
 
+### 2. Backend - Authentication Handlers (Tasks 2.1-2.6)
+
+**Status**: Complete
+
+**Changes Made**:
+
+1. **Auth routes as Elysia plugin** (`packages/api/handlers/auth.ts`)
+   - Refactored from oRPC to native Elysia routes with Eden Treaty support
+   - `POST /auth/sign-up` - Creates user account with Better Auth, returns user profile, sets session cookies
+   - `POST /auth/sign-in` - Authenticates user with email/password, returns user profile, sets session cookies
+   - `POST /auth/sign-out` - Clears session cookies
+   - `GET /auth/profile` - Returns current user profile or null if not authenticated
+   - Uses Elysia's `t` for request body validation
+
+2. **Elysia integration** (`packages/api/index.ts`)
+   - Integrated auth routes using `.use(authRoutes)`
+   - Exported `App` type for Eden Treaty client type inference
+   - Removed oRPC handler and dependencies
+
+3. **Removed oRPC dependencies**
+   - Deleted `packages/api/router.ts`
+   - Removed `@orpc/client` and `@orpc/server` from root package.json
+
+**API Endpoints Available**:
+- `POST /auth/sign-up` - Create new user account
+- `POST /auth/sign-in` - Sign in with email/password
+- `POST /auth/sign-out` - Sign out and clear session
+- `GET /auth/profile` - Get current user profile
+
 

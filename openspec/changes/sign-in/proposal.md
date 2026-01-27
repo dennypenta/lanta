@@ -9,7 +9,7 @@ The application currently has no authentication system, meaning there's no way t
 - Add sign-up functionality with email and password (immediate access, no email verification)
 - Add sign-in functionality with email and password
 - Implement cookie-based session management via Better Auth
-- Create oRPC handlers for sign-up, sign-in, and sign-out operations
+- Create Elysia route handlers for sign-up, sign-in, and sign-out operations
 - Add profile display in the header with dropdown menu and sign-out option
 - Implement route guards using @solidjs/router to protect authenticated pages
 - Handle UNAUTHORIZED errors from RPC by redirecting to sign-in
@@ -31,4 +31,4 @@ The application currently has no authentication system, meaning there's no way t
     - `web/src/components/pages/SignIn.tsx` - Sign-in page
     - `web/src/components/pages/SignUp.tsx` - Sign-up page
     - `web/src/contexts/AuthContext.tsx` - Auth state management (optional)
-    - `web/src/lib/rpc.ts` - oRPC client setup
+    - `web/src/lib/api.ts` - Eden Treaty client setup
