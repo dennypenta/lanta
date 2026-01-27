@@ -34,3 +34,8 @@ Your app is ready to be deployed!
 You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
 
 ## This project was created with the [Solid CLI](https://github.com/solidjs-community/solid-cli)
+
+### ui registries
+
+- first: https://github.com/stefan-karger/solid-ui/blob/main/apps/docs/src/registry/ui/accordion.tsx
+- second: https://github.com/hngngn/shadcn-solid/blob/main/apps/docs/src/registry/ui/accordion.tsx
