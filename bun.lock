@@ -31,7 +31,7 @@
         "better-auth": "^1.4.10",
         "drizzle-orm": "^0.45.1",
         "elysia": "^1.4.22",
-        "zod": "^4.3.5",
+        "typebox": "^1.0.79",
       },
       "devDependencies": {
         "@better-auth/cli": "^1.4.10",
@@ -43,7 +43,7 @@
     "packages/rpc": {
       "name": "@lanta/rpc",
       "dependencies": {
-        "zod": "^4.3.5",
+        "typebox": "^1.0.79",
       },
     },
     "packages/web": {
@@ -967,6 +967,8 @@
     "type-check": ["type-check@0.4.0", "", { "dependencies": { "prelude-ls": "^1.2.1" } }, "sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew=="],
 
     "type-fest": ["type-fest@5.4.1", "", { "dependencies": { "tagged-tag": "^1.0.0" } }, "sha512-xygQcmneDyzsEuKZrFbRMne5HDqMs++aFzefrJTgEIKjQ3rekM+RPfFCVq2Gp1VIDqddoYeppCj4Pcb+RZW0GQ=="],
+
+    "typebox": ["typebox@1.0.79", "", {}, "sha512-luG4ORaG70S8mK00kCQR3Ow2xXaqzHv03/PHJJGs9Mjg1Q+0k3Kwz6Z5ORjoqSwWl3ixDUKgJajZ2vvBGs3ECA=="],
 
     "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
 

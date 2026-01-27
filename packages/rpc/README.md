@@ -8,11 +8,11 @@ Shared validation schemas, types, and utilities for Lanta monorepo.
 
 ```typescript
 import { createProjectSchema, type Project } from '@lanta/rpc/schemas'
-import { z } from 'zod'
+import { Value } from 'typebox/value'
 
 // Validate request body
 app.post('/api/projects', async (req) => {
-  const body = createProjectSchema.parse(req.body)
+  const body = Value.Parse(createProjectSchema, req.body)
   // body is now typed as CreateProject
 
   const project = await db.insert(projects).values(body)
@@ -24,6 +24,7 @@ app.post('/api/projects', async (req) => {
 
 ```typescript
 import { createProjectSchema, type CreateProject } from "@lanta/rpc/schemas";
+import { Value } from "typebox/value";
 import { createSignal } from "solid-js";
 
 function CreateProjectForm() {
@@ -36,17 +37,18 @@ function CreateProjectForm() {
     e.preventDefault();
 
     // Validate with same schema as backend
-    const result = createProjectSchema.safeParse(formData());
+    const isValid = Value.Check(createProjectSchema, formData());
 
-    if (!result.success) {
-      console.error(result.error.flatten());
+    if (!isValid) {
+      const errors = [...Value.Errors(createProjectSchema, formData())];
+      console.error(errors);
       return;
     }
 
     // Send validated data to API
     fetch("/api/projects", {
       method: "POST",
-      body: JSON.stringify(result.data),
+      body: JSON.stringify(formData()),
     });
   };
 
@@ -70,7 +72,7 @@ const fetchProjects = async (): Promise<ApiResponse<Project[]>> => {
 ```
 rpc/
 ├── src/
-│   ├── schemas/       # Zod validation schemas
+│   ├── schemas/       # TypeBox validation schemas
 │   │   ├── project.ts
 │   │   ├── member.ts
 │   │   └── index.ts

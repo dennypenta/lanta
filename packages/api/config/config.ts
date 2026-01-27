@@ -1,4 +1,5 @@
-import { z } from 'zod'
+import { Type } from 'typebox'
+import { Value } from 'typebox/value'
 
 const LogLevel: Record<string, number> = {
   DEBUG: 0,
@@ -7,21 +8,21 @@ const LogLevel: Record<string, number> = {
   ERROR: 3,
 }
 
-const Config = z.object({
-  port: z.number(),
-  dbFileName: z.string(),
-  corsOrigin: z.string(),
-  logLevel: z.number().optional(),
+const Config = Type.Object({
+  port: Type.Number(),
+  dbFileName: Type.String(),
+  corsOrigin: Type.String(),
+  logLevel: Type.Optional(Type.Number()),
 })
 
-export type Config = z.infer<typeof Config>
+export type Config = Type.Static<typeof Config>
 
 export function newConfig(): Config {
   const logLevel = process.env.LOG_LEVEL
     ? LogLevel[process.env.LOG_LEVEL!.toUpperCase()]
     : LogLevel.INFO
 
-  return Config.parse({
+  return Value.Parse(Config, {
     port: Number(process.env.PORT),
     dbFileName: process.env.DB_FILE_NAME,
     corsOrigin: process.env.CORS_ORIGIN,
@@ -29,8 +30,12 @@ export function newConfig(): Config {
   })
 }
 
+const DbConfig = Type.Object({
+  dbFileName: Type.String(),
+})
+
 export function newDbConfig(): Partial<Config> {
-  return Config.pick({ dbFileName: true }).parse({
+  return Value.Parse(DbConfig, {
     dbFileName: process.env.DB_FILE_NAME,
   })
 }

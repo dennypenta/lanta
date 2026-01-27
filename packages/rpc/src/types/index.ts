@@ -1,10 +1,5 @@
 // Re-export types from schemas
-export type {
-  AuthEnterResponse,
-  SignInInput,
-  SignUpInput,
-  UserProfile,
-} from '../schemas/auth'
+export type { AuthEnterResponse, SignInInput, SignUpInput, UserProfile } from '../schemas/auth'
 export type { CreateProject, Project, UpdateProject } from '../schemas/project'
 
 export type { AddProjectMember, MemberRole, ProjectMember } from '../schemas/member'

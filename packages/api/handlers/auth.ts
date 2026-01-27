@@ -1,6 +1,6 @@
 import { os } from '@orpc/server'
 import type { ResponseHeadersPluginContext } from '@orpc/server/plugins'
-import { z } from 'zod'
+import { Type } from 'typebox'
 
 import {
   authEnterResponseSchema,
@@ -91,7 +91,7 @@ export const signIn = authBase
 
 // Sign-out handler
 export const signOut = authBase
-  .output(z.object({ success: z.boolean() }))
+  .output(Type.Object({ success: Type.Boolean() }))
   .handler(async ({ context }) => {
     const result = await auth.api.signOut({
       headers: context.reqHeaders,
@@ -105,7 +105,7 @@ export const signOut = authBase
 
 // Get profile handler
 export const getProfile = authBase
-  .output(userProfileSchema.nullable())
+  .output(Type.Union([userProfileSchema, Type.Null()]))
   .handler(async ({ context }) => {
     const session = await auth.api.getSession({
       headers: context.reqHeaders ?? new Headers(),
