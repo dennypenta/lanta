@@ -1,49 +1,52 @@
-import { Type } from 'typebox'
+import { t } from 'elysia'
 
 const minEmailLen = 3
 const minPasswordLen = 4
 
-// User profile schema
-export const userProfileSchema = Type.Object({
-  id: Type.String(),
-  name: Type.String(),
-  email: Type.String({ format: 'email' }),
-  emailVerified: Type.Boolean(),
-  createdAt: Type.String({ format: 'date-time' }),
-  updatedAt: Type.String({ format: 'date-time' }),
+export const userProfileSchema = t.Object({
+  id: t.String(),
+  name: t.String(),
+  email: t.String({ format: 'email' }),
+  emailVerified: t.Boolean(),
+  createdAt: t.String({ format: 'date-time' }),
+  updatedAt: t.String({ format: 'date-time' }),
 })
 
-// Sign-up input schema
-export const signUpInputSchema = Type.Object({
-  name: Type.String({ minLength: 1, description: 'Name is required' }),
-  email: Type.String({
+export const signUpInputSchema = t.Object({
+  name: t.String({ minLength: 1, description: 'Name is required' }),
+  email: t.String({
     format: 'email',
     minLength: minEmailLen,
     description: 'Invalid email address',
   }),
-  password: Type.String({
+  password: t.String({
     minLength: minPasswordLen,
     description: 'Password must be at least 8 characters',
   }),
 })
 
-// Sign-in input schema
-export const signInInputSchema = Type.Object({
-  email: Type.String({
+export const signInInputSchema = t.Object({
+  email: t.String({
     format: 'email',
     minLength: minEmailLen,
     description: 'Invalid email address',
   }),
-  password: Type.String({ minLength: minPasswordLen, description: 'Password is required' }),
+  password: t.String({ minLength: minPasswordLen, description: 'Password is required' }),
 })
 
-// Auth response schema (used for sign-up and sign-in)
-export const authEnterResponseSchema = Type.Object({
+export const authEnterResponseSchema = t.Object({
   user: userProfileSchema,
 })
 
-// Export inferred types
-export type UserProfile = Type.Static<typeof userProfileSchema>
-export type SignUpInput = Type.Static<typeof signUpInputSchema>
-export type SignInInput = Type.Static<typeof signInInputSchema>
-export type AuthEnterResponse = Type.Static<typeof authEnterResponseSchema>
+export const signOutResponseSchema = t.Object({
+  success: t.Boolean(),
+})
+
+export const profileResponseSchema = t.Union([userProfileSchema, t.Null()])
+
+export type UserProfile = typeof userProfileSchema.static
+export type SignUpInput = typeof signUpInputSchema.static
+export type SignInInput = typeof signInInputSchema.static
+export type AuthEnterResponse = typeof authEnterResponseSchema.static
+export type SignOutResponse = typeof signOutResponseSchema.static
+export type ProfileResponse = typeof profileResponseSchema.static

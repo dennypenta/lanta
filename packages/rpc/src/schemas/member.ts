@@ -1,28 +1,20 @@
-import { Type } from 'typebox'
+import { t } from 'elysia'
 
-// Project member roles
-export const memberRoleSchema = Type.Union([
-  Type.Literal('admin'),
-  Type.Literal('member'),
-  Type.Literal('viewer'),
-])
+export const memberRoleSchema = t.Union([t.Literal('admin'), t.Literal('member'), t.Literal('viewer')])
 
-// Base project member schema
-export const projectMemberSchema = Type.Object({
-  id: Type.String(),
-  projectId: Type.String(),
-  userId: Type.String(),
+export const projectMemberSchema = t.Object({
+  id: t.String(),
+  projectId: t.String(),
+  userId: t.String(),
   role: memberRoleSchema,
-  joinedAt: Type.String({ format: 'date-time' }),
+  joinedAt: t.String({ format: 'date-time' }),
 })
 
-// Schema for adding a member to a project
-export const addProjectMemberSchema = Type.Object({
-  userId: Type.String(),
-  role: Type.Optional(memberRoleSchema),
+export const addProjectMemberSchema = t.Object({
+  userId: t.String(),
+  role: t.Optional(memberRoleSchema),
 })
 
-// Export inferred types
-export type ProjectMember = Type.Static<typeof projectMemberSchema>
-export type AddProjectMember = Type.Static<typeof addProjectMemberSchema>
-export type MemberRole = Type.Static<typeof memberRoleSchema>
+export type ProjectMember = typeof projectMemberSchema.static
+export type AddProjectMember = typeof addProjectMemberSchema.static
+export type MemberRole = typeof memberRoleSchema.static

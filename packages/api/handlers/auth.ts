@@ -1,8 +1,19 @@
-import { Elysia, t } from 'elysia'
+import { Elysia } from 'elysia'
+
+import {
+  authEnterResponseSchema,
+  profileResponseSchema,
+  signInInputSchema,
+  signOutResponseSchema,
+  signUpInputSchema,
+  type AuthEnterResponse,
+  type ProfileResponse,
+  type SignOutResponse,
+  type UserProfile,
+} from '@lanta/rpc/schemas'
 
 import { auth } from '../auth.config.ts'
 
-// Helper to map Better Auth user to our profile shape
 function mapUserToProfile(user: {
   id: string
   name: string
@@ -10,22 +21,21 @@ function mapUserToProfile(user: {
   emailVerified: boolean
   createdAt: Date
   updatedAt: Date
-}) {
+}): UserProfile {
   return {
     id: user.id,
     name: user.name,
     email: user.email,
     emailVerified: user.emailVerified,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
+    createdAt: user.createdAt.toISOString(),
+    updatedAt: user.updatedAt.toISOString(),
   }
 }
 
-// Auth routes as Elysia plugin
 export const authRoutes = new Elysia({ prefix: '/auth' })
   .post(
     '/sign-up',
-    async ({ body, request, set }) => {
+    async ({ body, request, set }): Promise<AuthEnterResponse> => {
       const result = await auth.api.signUpEmail({
         body: {
           name: body.name,
@@ -36,7 +46,6 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
         returnHeaders: true,
       })
 
-      // Copy session cookies to response
       const cookies = result.headers?.getSetCookie() ?? []
       for (const cookie of cookies) {
         set.headers['set-cookie'] = cookie
@@ -47,16 +56,13 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
       }
     },
     {
-      body: t.Object({
-        name: t.String({ minLength: 1 }),
-        email: t.String({ format: 'email' }),
-        password: t.String({ minLength: 4 }),
-      }),
+      body: signUpInputSchema,
+      response: authEnterResponseSchema,
     },
   )
   .post(
     '/sign-in',
-    async ({ body, request, set }) => {
+    async ({ body, request, set }): Promise<AuthEnterResponse> => {
       const result = await auth.api.signInEmail({
         body: {
           email: body.email,
@@ -66,7 +72,6 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
         returnHeaders: true,
       })
 
-      // Copy session cookies to response
       const cookies = result.headers?.getSetCookie() ?? []
       for (const cookie of cookies) {
         set.headers['set-cookie'] = cookie
@@ -77,34 +82,43 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
       }
     },
     {
-      body: t.Object({
-        email: t.String({ format: 'email' }),
-        password: t.String({ minLength: 4 }),
-      }),
+      body: signInInputSchema,
+      response: authEnterResponseSchema,
     },
   )
-  .post('/sign-out', async ({ request, set }) => {
-    const result = await auth.api.signOut({
-      headers: request.headers,
-      returnHeaders: true,
-    })
+  .post(
+    '/sign-out',
+    async ({ request, set }): Promise<SignOutResponse> => {
+      const result = await auth.api.signOut({
+        headers: request.headers,
+        returnHeaders: true,
+      })
 
-    // Copy cookies to clear session
-    const cookies = result.headers?.getSetCookie() ?? []
-    for (const cookie of cookies) {
-      set.headers['set-cookie'] = cookie
-    }
+      const cookies = result.headers?.getSetCookie() ?? []
+      for (const cookie of cookies) {
+        set.headers['set-cookie'] = cookie
+      }
 
-    return { success: result.response.success }
-  })
-  .get('/profile', async ({ request }) => {
-    const session = await auth.api.getSession({
-      headers: request.headers,
-    })
+      return { success: result.response.success }
+    },
+    {
+      response: signOutResponseSchema,
+    },
+  )
+  .get(
+    '/profile',
+    async ({ request }): Promise<ProfileResponse> => {
+      const session = await auth.api.getSession({
+        headers: request.headers,
+      })
 
-    if (!session) {
-      return null
-    }
+      if (!session) {
+        return null
+      }
 
-    return mapUserToProfile(session.user)
-  })
+      return mapUserToProfile(session.user)
+    },
+    {
+      response: profileResponseSchema,
+    },
+  )
