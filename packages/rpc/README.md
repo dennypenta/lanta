@@ -2,29 +2,30 @@
 
 Shared validation schemas, types, and utilities for Lanta monorepo.
 
+## Tech Stack
+
+- **Validation**: Valibot
+
 ## Usage
 
 ### In API (Backend)
 
 ```typescript
-import { createProjectSchema, type Project } from '@lanta/rpc/schemas'
-import { Value } from 'typebox/value'
+import { createProjectSchema, type Project } from "@lanta/rpc/schemas";
+import * as v from "valibot";
 
-// Validate request body
-app.post('/api/projects', async (req) => {
-  const body = Value.Parse(createProjectSchema, req.body)
-  // body is now typed as CreateProject
-
-  const project = await db.insert(projects).values(body)
-  return project
-})
+app.post("/api/projects", async (req) => {
+  const body = v.parse(createProjectSchema, req.body);
+  const project = await db.insert(projects).values(body);
+  return project;
+});
 ```
 
 ### In Web (Frontend)
 
 ```typescript
 import { createProjectSchema, type CreateProject } from "@lanta/rpc/schemas";
-import { Value } from "typebox/value";
+import * as v from "valibot";
 import { createSignal } from "solid-js";
 
 function CreateProjectForm() {
@@ -36,16 +37,12 @@ function CreateProjectForm() {
   const handleSubmit = (e: Event) => {
     e.preventDefault();
 
-    // Validate with same schema as backend
-    const isValid = Value.Check(createProjectSchema, formData());
-
-    if (!isValid) {
-      const errors = [...Value.Errors(createProjectSchema, formData())];
-      console.error(errors);
+    const result = v.safeParse(createProjectSchema, formData());
+    if (!result.success) {
+      console.error(result.issues);
       return;
     }
 
-    // Send validated data to API
     fetch("/api/projects", {
       method: "POST",
       body: JSON.stringify(formData()),
@@ -59,12 +56,12 @@ function CreateProjectForm() {
 ### Using Types Only
 
 ```typescript
-import type { Project, ApiResponse } from '@lanta/rpc/types'
+import type { Project, ApiResponse } from "@lanta/rpc/types";
 
 const fetchProjects = async (): Promise<ApiResponse<Project[]>> => {
-  const response = await fetch('/api/projects')
-  return response.json()
-}
+  const response = await fetch("/api/projects");
+  return response.json();
+};
 ```
 
 ## Structure
@@ -72,7 +69,7 @@ const fetchProjects = async (): Promise<ApiResponse<Project[]>> => {
 ```
 rpc/
 ├── src/
-│   ├── schemas/       # TypeBox validation schemas
+│   ├── schemas/       # Valibot validation schemas
 │   │   ├── project.ts
 │   │   ├── member.ts
 │   │   └── index.ts

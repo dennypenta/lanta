@@ -1,3 +1,20 @@
+# Lanta
+
+Task management application.
+
+## Tech Stack
+
+- **Runtime**: Bun
+- **API Framework**: Elysia
+- **Authentication**: Better Auth with Drizzle adapter
+- **Database**: Drizzle ORM + SQLite
+- **Validation**: Valibot
+- **Frontend**: SolidJS + Solid Router
+- **UI Components**: Kobalte UI
+- **Styling**: Tailwind CSS
+
+## Roadmap
+
 - [x] setup basic api
 - [x] add env loading for config
 - [ ] cors middleware

@@ -22,8 +22,18 @@ Keep this managed block so 'openspec update' can refresh the instructions.
 
 ## Project Overview
 
-Lanta is a task management application. Built with Bun, TypeScript, Drizzle ORM, and Better Auth.
-For web client it uses solid js, tailwind and Ark UI.
+Lanta is a task management application.
+
+### Tech Stack
+
+- **Runtime**: Bun
+- **API Framework**: Elysia
+- **Authentication**: Better Auth with Drizzle adapter
+- **Database**: Drizzle ORM + SQLite
+- **Validation**: Valibot
+- **Frontend**: SolidJS + Solid Router
+- **UI Components**: Kobalte UI
+- **Styling**: Tailwind CSS
 
 ## Development Commands
 
@@ -51,13 +61,13 @@ bun format:check              # Check code formatting
 
 ## Architecture
 
-### Tech Stack
+### Architecture Details
 
 - **Runtime**: Bun (configured with `bunfig.toml`)
-- **Database**: Drizzle ORM
+- **Database**: Drizzle ORM + SQLite
 - **Authentication**: Better Auth with Drizzle adapter
-- **Validation**: Zod schemas
-- **API**: Bun native HTTP server
+- **Validation**: Valibot schemas
+- **API**: Elysia framework
 
 ### Directory Structure
 
@@ -75,7 +85,7 @@ api/
 
 ### Configuration
 
-Environment variables are validated using Zod schemas in `api/config/config.ts`:
+Environment variables are validated using Valibot schemas in `api/config/config.ts`:
 
 - `PORT` - Server port
 - `DB_FILE_NAME` - SQLite database file path

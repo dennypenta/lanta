@@ -1,39 +1,25 @@
-## Usage
+# @lanta/web
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+SolidJS frontend for Lanta.
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+## Tech Stack
 
-```bash
-$ npm install # or pnpm install or yarn install
-```
-
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+- **Framework**: SolidJS
+- **Router**: Solid Router
+- **UI Components**: Kobalte UI
+- **Styling**: Tailwind CSS
 
 ## Available Scripts
 
-In the project directory, you can run:
+### `bun dev`
 
-### `npm run dev` or `npm start`
+Runs the app in development mode at [http://localhost:3000](http://localhost:3000).
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### `bun run build`
 
-The page will reload if you make edits.<br>
-
-### `npm run build`
-
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+Builds the app for production to the `dist` folder.
 
 ## Deployment
-
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
-
-## This project was created with the [Solid CLI](https://github.com/solidjs-community/solid-cli)
 
 ### ui registries
 
