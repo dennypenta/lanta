@@ -1,4 +1,4 @@
-import { os } from '@orpc/server'
+import { Elysia } from 'elysia'
 
 export const LOG_LEVEL_DEBUG = 0
 export const LOG_LEVEL_INFO = 1
@@ -10,25 +10,18 @@ function shouldLog(current: number, target: number): boolean {
 }
 
 export function loggingMiddleware(level: number = LOG_LEVEL_INFO) {
-  return os.middleware(async ({ context: _context, next, path }) => {
-    const start = performance.now()
-    const pathStr = path.join('/')
-
-    try {
-      const result = await next({})
-      const durationMs = (performance.now() - start).toFixed(2)
-
+  return new Elysia({ name: 'logging' })
+    .derive({ as: 'global' }, () => ({
+      requestStart: performance.now(),
+    }))
+    .onAfterHandle({ as: 'global' }, ({ path, requestStart }) => {
       if (shouldLog(level, LOG_LEVEL_INFO)) {
-        console.info(`path=${pathStr} duration=${durationMs}ms`)
+        const durationMs = (performance.now() - requestStart).toFixed(2)
+        console.info(`path=${path} duration=${durationMs}ms`)
       }
-
-      return result
-    } catch (error) {
-      const durationMs = (performance.now() - start).toFixed(2)
-
-      console.info(`path=${pathStr} duration=${durationMs}ms error=${error}`)
-
-      throw error
-    }
-  })
+    })
+    .onError({ as: 'global' }, ({ path, error, requestStart }) => {
+      const durationMs = requestStart ? (performance.now() - requestStart).toFixed(2) : 'unknown'
+      console.error(`path=${path} duration=${durationMs}ms error=${error}`)
+    })
 }

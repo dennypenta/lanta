@@ -1,9 +1,15 @@
 import { Elysia } from 'elysia'
 import newConfig from './config/config.ts'
+import { securityHeadersMiddleware } from './middlewares/headers.ts'
+import { loggingMiddleware } from './middlewares/logging.ts'
 
 const config = newConfig()
 
-const app = new Elysia().get('/health', () => 'Hello Elysia').listen(config.port)
+const app = new Elysia()
+  .use(securityHeadersMiddleware())
+  .use(loggingMiddleware())
+  .get('/health', () => 'Hello Elysia')
+  .listen(config.port)
 const server = app.server!
 
 console.log(`Server running at ${server.url}`)
